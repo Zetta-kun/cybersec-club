@@ -1,6 +1,3 @@
-cd C:\Users\Nitro-2026\Desktop\club_db
-
-$readme = @"
 # 🛡️ CyberSec Club - Professional CTF Platform
 
 A full-stack Capture The Flag (CTF) platform with Codeforces-style ELO rating system for cybersecurity enthusiasts.
