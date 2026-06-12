@@ -1,0 +1,41 @@
+﻿version: '3.8'
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: cybersec_db
+    environment:
+      POSTGRES_DB: cybersec_club
+      POSTGRES_USER: cybersec_user
+      POSTGRES_PASSWORD: changeme123!
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./database/init.sql:/docker-entrypoint-initdb.d/01_init.sql
+    ports:
+      - \"5432:5432\"
+    networks:
+      - cybersec_net
+  redis:
+    image: redis:7-alpine
+    container_name: cybersec_redis
+    command: redis-server --requirepass redis123!
+    ports:
+      - \"6379:6379\"
+    networks:
+      - cybersec_net
+  backend:
+    build: .
+    container_name: cybersec_api
+    environment:
+      DATABASE_URL: postgresql+asyncpg://cybersec_user:changeme123!@postgres:5432/cybersec_club
+      REDIS_URL: redis://:redis123!@redis:6379/0
+    ports:
+      - \"8000:8000\"
+    depends_on:
+      - postgres
+      - redis
+    networks:
+      - cybersec_net
+networks:
+  cybersec_net:
+volumes:
+  postgres_data:
